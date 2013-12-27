@@ -21,9 +21,11 @@
 #include <KGlobal>
 #include <KStandardDirs>
 #include <KDebug>
+#include <KConfigGroup>
 
 #include <Plasma/Package>
 
+#include "config.h"
 #include "thememetadata.h"
 
 ThemesModel::ThemesModel(QObject *parent)
@@ -80,13 +82,15 @@ QVariant ThemesModel::data(const QModelIndex &index, int role) const
 
 void ThemesModel::populate()
 {
-    QStringList themesBaseDirs = KGlobal::dirs()->findDirs("data", "sddm/themes");
+    KSharedConfigPtr config = KSharedConfig::openConfig(SDDM_CONFIG_FILE, KConfig::SimpleConfig);
 
-    if (themesBaseDirs.isEmpty())
+    if (!config)
         return;
 
-    foreach (const QString &id, Plasma::Package::listInstalledPaths(themesBaseDirs.last())) {
-        QString path = themesBaseDirs.last() + id;
+    QString themesBaseDir = config->group("General").readEntry("ThemesDir");
+
+    foreach (const QString &id, Plasma::Package::listInstalledPaths(themesBaseDir)) {
+        QString path = themesBaseDir + id;
 
         dump(id, path);
 
