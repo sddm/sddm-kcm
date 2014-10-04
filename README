@@ -1,4 +1,1 @@
-mkdir build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
-make install
+Go here: https://projects.kde.org/projects/kdereview/sddm-kcm/repository
